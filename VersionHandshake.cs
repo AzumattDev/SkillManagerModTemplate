@@ -12,7 +12,7 @@ namespace SkillManagerModTemplate
             // Register version check call
             SkillManagerModTemplatePlugin.SkillManagerModTemplateLogger.LogDebug("Registering version RPC handler");
             peer.m_rpc.Register($"{SkillManagerModTemplatePlugin.ModName}_VersionCheck",
-                new Action<ZRpc, ZPackage>(RpcHandlers.RPC_SkillManagerMod_Version));
+                new Action<ZRpc, ZPackage>(RpcHandlers.RPC_SkillManagerModTemplate_Version));
 
             // Make calls to check versions
             SkillManagerModTemplatePlugin.SkillManagerModTemplateLogger.LogInfo("Invoking version check");
@@ -69,7 +69,7 @@ namespace SkillManagerModTemplate
     {
         public static readonly List<ZRpc> ValidatedPeers = new();
 
-        public static void RPC_SkillManagerMod_Version(ZRpc rpc, ZPackage pkg)
+        public static void RPC_SkillManagerModTemplate_Version(ZRpc rpc, ZPackage pkg)
         {
             string? version = pkg.ReadString();
             SkillManagerModTemplatePlugin.SkillManagerModTemplateLogger.LogInfo("Version check, local: " +

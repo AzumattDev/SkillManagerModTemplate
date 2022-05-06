@@ -1,0 +1,33 @@
+﻿{
+  "author": "Azumatt",
+  "classifications": [
+    "Skill Manager Mod"
+  ],
+  "name": "SkillManagerModTemplate",
+  "identity": "Skill.Manager.Mod.Template",
+  "shortName": "smmt",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "SkillManagerModTemplate",
+  "preferNameDirectory": "true",
+  "symbols": {
+    "AuthorName": {
+      "type": "parameter",
+      "description": "The name of the person that you want to call the author of the mod.",
+      "datatype": "string",
+      "defaultValue": "azumatt",
+      "replaces": "{azumatt}"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [ ".git/**", ".idea/**", ".vs/**", "obj/**", "bin/**", "SkillManagerModTemplate.sln", "SkillManagerModTemplate.sln.DotSettings.user" ]
+        }
+      ]
+    }
+  ]
+}
