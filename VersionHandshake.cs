@@ -15,7 +15,7 @@ namespace SkillManagerModTemplate
                 new Action<ZRpc, ZPackage>(RpcHandlers.RPC_SkillManagerModTemplate_Version));
 
             // Make calls to check versions
-            SkillManagerModTemplatePlugin.SkillManagerModTemplateLogger.LogInfo("Invoking version check");
+            SkillManagerModTemplatePlugin.SkillManagerModTemplateLogger.LogDebug("Invoking version check");
             ZPackage zpackage = new();
             zpackage.Write(SkillManagerModTemplatePlugin.ModVersion);
             peer.m_rpc.Invoke($"{SkillManagerModTemplatePlugin.ModName}_VersionCheck", zpackage);
@@ -48,7 +48,11 @@ namespace SkillManagerModTemplate
         private static void Postfix(FejdStartup __instance)
         {
             if (__instance.m_connectionFailedPanel.activeSelf)
+            {
+                __instance.m_connectionFailedError.resizeTextMaxSize = 25;
+                __instance.m_connectionFailedError.resizeTextMinSize = 15;
                 __instance.m_connectionFailedError.text += "\n" + SkillManagerModTemplatePlugin.ConnectionError;
+            }
         }
     }
 
