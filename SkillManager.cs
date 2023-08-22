@@ -220,7 +220,7 @@ public class Skill
 			if (skill.Configurable)
 			{
 				string nameKey = skill.Name.Key;
-				string englishName = new Regex("['[\"\\]]").Replace(english.Localize(nameKey), "").Trim();
+				string englishName = new Regex(@"[=\n\t\\""\'\[\]]*").Replace(english.Localize(nameKey), "").Trim();
 				string localizedName = Localization.instance.Localize(nameKey).Trim();
 
 				ConfigEntry<float> skillGain = config(englishName, "Skill gain factor", skill.SkillGainFactor, new ConfigDescription("The rate at which you gain experience for the skill.", new AcceptableValueRange<float>(0.01f, 5f), new ConfigurationManagerAttributes { Category = localizedName }));
