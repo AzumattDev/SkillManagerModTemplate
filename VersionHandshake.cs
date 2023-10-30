@@ -22,7 +22,6 @@ namespace SkillManagerModTemplate
             SkillManagerModTemplatePlugin.SkillManagerModTemplateLogger.LogDebug("Invoking version check");
             ZPackage zpackage = new();
             zpackage.Write(SkillManagerModTemplatePlugin.ModVersion);
-            zpackage.Write(RpcHandlers.ComputeHashForMod().Replace("-", ""));
             peer.m_rpc.Invoke($"{SkillManagerModTemplatePlugin.ModName}_VersionCheck", zpackage);
         }
     }
@@ -34,8 +33,7 @@ namespace SkillManagerModTemplate
         {
             if (!__instance.IsServer() || RpcHandlers.ValidatedPeers.Contains(rpc)) return true;
             // Disconnect peer if they didn't send mod version at all
-            SkillManagerModTemplatePlugin.SkillManagerModTemplateLogger.LogWarning(
-                $"Peer ({rpc.m_socket.GetHostName()}) never sent version or couldn't due to previous disconnect, disconnecting");
+            SkillManagerModTemplatePlugin.SkillManagerModTemplateLogger.LogWarning($"Peer ({rpc.m_socket.GetHostName()}) never sent version or couldn't due to previous disconnect, disconnecting");
             rpc.Invoke("Error", 3);
             return false; // Prevent calling underlying method
         }
@@ -81,15 +79,12 @@ namespace SkillManagerModTemplate
         public static void RPC_SkillManagerModTemplate_Version(ZRpc rpc, ZPackage pkg)
         {
             string? version = pkg.ReadString();
-            string? hash = pkg.ReadString();
-
-            var hashForAssembly = ComputeHashForMod().Replace("-", "");
             SkillManagerModTemplatePlugin.SkillManagerModTemplateLogger.LogInfo("Version check, local: " +
                                                                                 SkillManagerModTemplatePlugin.ModVersion +
                                                                                 ",  remote: " + version);
-            if (hash != hashForAssembly || version != SkillManagerModTemplatePlugin.ModVersion)
+            if (version != SkillManagerModTemplatePlugin.ModVersion)
             {
-                SkillManagerModTemplatePlugin.ConnectionError = $"{SkillManagerModTemplatePlugin.ModName} Installed: {SkillManagerModTemplatePlugin.ModVersion} {hashForAssembly}\n Needed: {version} {hash}";
+                SkillManagerModTemplatePlugin.ConnectionError = $"{SkillManagerModTemplatePlugin.ModName} Installed: {SkillManagerModTemplatePlugin.ModVersion}\n Needed: {version}";
                 if (!ZNet.instance.IsServer()) return;
                 // Different versions - force disconnect client from server
                 SkillManagerModTemplatePlugin.SkillManagerModTemplateLogger.LogWarning($"Peer ({rpc.m_socket.GetHostName()}) has incompatible version, disconnecting...");
@@ -111,21 +106,6 @@ namespace SkillManagerModTemplate
                     ValidatedPeers.Add(rpc);
                 }
             }
-        }
-
-        public static string ComputeHashForMod()
-        {
-            using SHA256 sha256Hash = SHA256.Create();
-            // ComputeHash - returns byte array  
-            byte[] bytes = sha256Hash.ComputeHash(File.ReadAllBytes(Assembly.GetExecutingAssembly().Location));
-            // Convert byte array to a string   
-            StringBuilder builder = new();
-            foreach (byte b in bytes)
-            {
-                builder.Append(b.ToString("X2"));
-            }
-
-            return builder.ToString();
         }
     }
 }
